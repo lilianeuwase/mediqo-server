@@ -216,9 +216,7 @@ app.get("/getAllUser", async (req, res) => {
 app.post("/deleteUser", async (req, res) => {
   const { userid } = req.body;
   try {
-    User.deleteOne({ _id: userid }, function (err, res) {
-      console.log(err);
-    });
+    await User.deleteOne({ _id: userid });
     res.send({ status: "Ok", data: "Deleted" });
   } catch (error) {
     console.log(error);
@@ -575,9 +573,7 @@ app.get("/getAllPatient", async (req, res) => {
 app.post("/deletePatient", async (req, res) => {
   const { patientid } = req.body;
   try {
-    Patient.deleteOne({ _id: patientid }, function (err, res) {
-      console.log(err);
-    });
+    await Patient.deleteOne({ _id: patientid });
     res.send({ status: "Ok", data: "Deleted" });
   } catch (error) {
     console.log(error);
@@ -887,9 +883,7 @@ app.get("/getAllHyperPatient", async (req, res) => {
 app.post("/deleteHyperPatient", async (req, res) => {
   const { Hyperpatientid } = req.body;
   try {
-    HyperPatient.deleteOne({ _id: Hyperpatientid }, function (err, res) {
-      console.log(err);
-    });
+    await HyperPatient.deleteOne({ _id: Hyperpatientid });
     res.send({ status: "Ok", data: "Deleted" });
   } catch (error) {
     console.log(error);
