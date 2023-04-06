@@ -30,11 +30,13 @@ require("./userDetails");
 require("./patDetails");
 require("./imageDetails");
 require("./hyperDetails");
+require("./asthmaDetails");
 
 const User = mongoose.model("UserInfo");
 const Images = mongoose.model("ImageDetails");
 const Patient = mongoose.model("PatInfo");
 const HyperPatient = mongoose.model("HyperInfo");
+const AsthmaPatient = mongoose.model("AsthmaInfo");
 
 //User Registration
 app.post("/register", async (req, res) => {
@@ -903,3 +905,292 @@ app.get("/oneHyperPatientData", async (req, res) => {
       });
   } catch (error) {}
 });
+
+
+//Asthma Patients
+//Asthma Patient Registration
+app.post("/registerAsthmaPatient", async (req, res) => {
+  const {
+    consultations,
+    //Profile
+    fname,
+    lname,
+    age,
+    gender,
+    height,
+    weight,
+    phone_number,
+
+    //Lab results
+    RR,
+    creatinine,
+
+    chronic_cough,
+
+    confusion,
+    tachycardia,
+    wheez,
+    sighing,
+    expiratory_time,
+    clubb,
+    cyanosis,
+
+    hiv,
+
+    //Complications
+    prego,
+
+    //Danger Signs
+    broken,
+  } = req.body;
+
+  try {
+    const oldAsthmaPatient = await AsthmaPatient.findOne({ phone_number });
+
+    if (oldAsthmaPatient) {
+      return res.json({ error: "Patient Exists" });
+    }
+    await AsthmaPatient.create({
+      consultations,
+      //Profile
+      fname,
+      lname,
+      age,
+      gender,
+      height,
+      weight,
+      phone_number,
+
+      //Lab results
+      RR,
+      creatinine,
+
+      chronic_cough,
+
+      confusion,
+      tachycardia,
+      wheez,
+      sighing,
+      expiratory_time,
+      clubb,
+      cyanosis,
+
+      hiv,
+
+      //Complications
+      prego,
+
+      //Danger Signs
+      broken,
+    });
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+});
+
+//Update Asthma Patient
+app.post("/updateAsthmaPatient", async (req, res) => {
+  const {
+    phone_number,
+
+    //Profile
+    consultations,
+    height,
+    weight,
+    bmi,
+
+    //Lab Results
+    systobp,
+    diastobp,
+    creatinine,
+
+    //Danger signs
+    confusion,
+    vision,
+    sighing,
+    chest_pain,
+    smoke,
+    diabetes,
+    proteinuria,
+
+    //Complications
+    bradycardia,
+    hyperkalemia,
+    prego,
+    hiv,
+  } = req.body;
+
+  try {
+    await AsthmaPatient.updateOne(
+      { phone_number: phone_number },
+      {
+        consultations: consultations,
+
+        $push: {
+          //Profile
+          height: height,
+          weight: weight,
+          bmi: bmi,
+
+          //Lab Resultd
+          systobp: systobp,
+          diastobp: diastobp,
+          creatinine: creatinine,
+
+          //Danger signs
+          confusion: confusion,
+          vision: vision,
+          sighing: sighing,
+          chest_pain: chest_pain,
+          smoke: smoke,
+          diabetes: diabetes,
+          proteinuria: proteinuria,
+
+          //Complications
+          bradycardia: bradycardia,
+          hyperkalemia: hyperkalemia,
+          prego: prego,
+          hiv: hiv,
+        },
+      }
+    );
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+});
+
+//Asthma Update Patient 1
+app.post("/updateAsthmaPatient1", async (req, res) => {
+  const { phone_number, diagnosis, patient_manage, medication, hyper_stage, control } = req.body;
+
+  try {
+    await AsthmaPatient.updateOne(
+      { phone_number: phone_number },
+      {
+        $push: {
+          diagnosis: diagnosis,
+          patient_manage: patient_manage,
+          medication: medication,
+          hyper_stage:hyper_stage,
+          control:control,
+        },
+      }
+    );
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+});
+
+//Asthma Patient Retrieval
+app.post("/login-Asthmapatient", async (req, res) => {
+  const { phone_number, lname } = req.body;
+
+  const Asthmapatient = await AsthmaPatient.findOne({ phone_number });
+  if (!Asthmapatient) {
+    return res.json({ error: "Patient Not found" });
+  }
+  if (lname === Asthmapatient.lname) {
+    const token = jwt.sign({ phone_number: Asthmapatient.phone_number }, JWT_SECRET, {
+      expiresIn: "120m",
+    });
+
+    if (res.status(201)) {
+      return res.json({ status: "ok", data: token });
+    } else {
+      return res.json({ error: "error" });
+    }
+  }
+  res.json({ status: "error", error: "Invalid Last Name" });
+});
+
+//Asthma Patients Data
+app.post("/asthmapatientData", async (req, res) => {
+  const { token } = req.body;
+  try {
+    const Asthmapatient = jwt.verify(token, JWT_SECRET, (err, res) => {
+      if (err) {
+        return "token expired";
+      }
+      return res;
+    });
+    console.log(Asthmapatient);
+    if (Asthmapatient == "token expired") {
+      return res.send({ status: "error", data: "token expired" });
+    }
+
+    const Asthmapatientphone = Asthmapatient.phone_number;
+    AsthmaPatient.findOne({ phone_number: Asthmapatientphone })
+      .then((data) => {
+        res.send({ status: "ok", data: data });
+      })
+      .catch((error) => {
+        res.send({ status: "error", data: error });
+      });
+  } catch (error) {}
+});
+
+//Asthma Paginate Patients
+app.get("/paginatedAsthmaPatients", async (req, res) => {
+  const allAsthmaPatient = await AsthmaPatient.find({});
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+
+  const startIndex = (page - 1) * limit;
+  const lastIndex = page * limit;
+
+  const results = {};
+  results.totalAsthmaPatient = allAsthmaPatient.length;
+  results.pageCount = Math.ceil(allAsthmaPatient.length / limit);
+
+  if (lastIndex < allAsthmaPatient.length) {
+    results.next = {
+      page: page + 1,
+    };
+  }
+  if (startIndex > 0) {
+    results.prev = {
+      page: page - 1,
+    };
+  }
+  results.result = allAsthmaPatient.slice(startIndex, lastIndex);
+  res.json(results);
+});
+
+//Get All Patient
+app.get("/getAllAsthmaPatient", async (req, res) => {
+  try {
+    const allAsthmaPatient = await AsthmaPatient.find({});
+    res.send({ status: "ok", data: allAsthmaPatient });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//Delete Patient
+app.post("/deleteAsthmaPatient", async (req, res) => {
+  const { Asthmapatientid } = req.body;
+  try {
+    await AsthmaPatient.deleteOne({ _id: Asthmapatientid });
+    res.send({ status: "Ok", data: "Deleted" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//One Patient
+app.get("/oneAsthmaPatientData", async (req, res) => {
+  const Asthmapatientphone = req.body;
+  try {
+    AsthmaPatient.findOne({ phone_number: Asthmapatientphone })
+      .then((data) => {
+        res.send({ status: "ok", data: data });
+      })
+      .catch((error) => {
+        res.send({ status: "error", data: error });
+      });
+  } catch (error) {}
+});
+
