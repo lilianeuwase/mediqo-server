@@ -21,6 +21,7 @@ const AsthmaDetailsScehma = new mongoose.Schema(
     creatinine: Array,
 
     chronic_cough: Array,
+    dyspnea: Array,
 
     //Complications
     // prego: Array,
