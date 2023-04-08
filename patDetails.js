@@ -4,6 +4,7 @@ const PatDetailsScehma = new mongoose.Schema(
   {
     //Initialize
     consultations: Number,
+    dates: Array,
     
     //Profile
     fname: String,

@@ -5,6 +5,7 @@ const HyperDetailsScehma = new mongoose.Schema(
     //Initialize
     consultations: Number,
     control: Array,
+    dates: Array,
 
     //Profile
     fname: String,

@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const AsthmaDetailsScehma = new mongoose.Schema(
   {
-
     asthma_severity: Array,
 
     consultations: Number,
+    dates: Array,
 
     //Profile
     fname: String,
@@ -22,20 +22,29 @@ const AsthmaDetailsScehma = new mongoose.Schema(
 
     chronic_cough: Array,
 
+    //Complications
+    // prego: Array,
+    // wheez: Array,
+    // expiratory_time: Array,
+    // clubb: Array,
+    // cyanosis: Array,
+
+    //Emergency Signs
+    acute_dyspnea: Array,
+    sighing: Array,
+    broken: Array,
+    tachy_brady: Array,
     confusion: Array,
     tachycardia: Array,
-    wheez: Array,
-    sighing: Array,
-    expiratory_time: Array,
-    clubb: Array,
-    cyanosis: Array,
+    bradycardia: Array,
+
+    //Co-morbidities
     hiv: Array,
-
-    //Complications
-    prego: Array,
-
-    //Danger Signs
-    broken: Array,
+    reflux: Array,
+    hist: Array,
+    allergies: Array,
+    heart: Array,
+    hypoxia: Array,
   },
   {
     collection: "AsthmaInfo",

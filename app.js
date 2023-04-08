@@ -7,10 +7,13 @@ const bcrypt = require("bcryptjs");
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 
-app.use(cors({
-origin: ["http://localhost:3000","https://mediqo.onrender.com"],
-}
-));
+// app.use(cors());
+
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://mediqo.onrender.com"],
+  })
+);
 
 const jwt = require("jsonwebtoken");
 var nodemailer = require("nodemailer");
@@ -134,7 +137,7 @@ app.post("/forgot-password", async (req, res) => {
     const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
       expiresIn: "20m",
     });
-    const link = `http://localhost:5000/reset-password/${oldUser._id}/${token}`;
+    const link = `https://mediqo-api.onrender.com/reset-password/${oldUser._id}/${token}`;
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -281,6 +284,7 @@ app.get("/paginatedUsers", async (req, res) => {
 app.post("/registerPatient", async (req, res) => {
   const {
     consultations,
+    dates,
     //Profile
     fname,
     lname,
@@ -335,6 +339,7 @@ app.post("/registerPatient", async (req, res) => {
     }
     await Patient.create({
       consultations,
+      dates,
       //Profile
       fname,
       lname,
@@ -390,6 +395,7 @@ app.post("/registerPatient", async (req, res) => {
 app.post("/updatePatient", async (req, res) => {
   const {
     phone_number,
+    dates,
 
     //Profile
     consultations,
@@ -430,6 +436,7 @@ app.post("/updatePatient", async (req, res) => {
         consultations: consultations,
 
         $push: {
+          dates: dates,
           //Profile
           height: height,
           weight: weight,
@@ -613,6 +620,7 @@ app.post("/registerHyperPatient", async (req, res) => {
   const {
     //Initialize
     consultations,
+    dates,
 
     //Profile
     fname,
@@ -661,6 +669,7 @@ app.post("/registerHyperPatient", async (req, res) => {
     await HyperPatient.create({
       //Initialize
       consultations,
+      dates,
 
       //Profile
       fname,
@@ -712,6 +721,7 @@ app.post("/updateHyperPatient", async (req, res) => {
 
     //Profile
     consultations,
+    dates,
     height,
     weight,
     bmi,
@@ -744,6 +754,7 @@ app.post("/updateHyperPatient", async (req, res) => {
         consultations: consultations,
 
         $push: {
+          dates: dates,
           //Profile
           height: height,
           weight: weight,
@@ -779,7 +790,14 @@ app.post("/updateHyperPatient", async (req, res) => {
 
 //Hyper Update Patient 1
 app.post("/updateHyperPatient1", async (req, res) => {
-  const { phone_number, diagnosis, patient_manage, medication, hyper_stage, control } = req.body;
+  const {
+    phone_number,
+    diagnosis,
+    patient_manage,
+    medication,
+    hyper_stage,
+    control,
+  } = req.body;
 
   try {
     await HyperPatient.updateOne(
@@ -789,8 +807,8 @@ app.post("/updateHyperPatient1", async (req, res) => {
           diagnosis: diagnosis,
           patient_manage: patient_manage,
           medication: medication,
-          hyper_stage:hyper_stage,
-          control:control,
+          hyper_stage: hyper_stage,
+          control: control,
         },
       }
     );
@@ -809,9 +827,13 @@ app.post("/login-Hyperpatient", async (req, res) => {
     return res.json({ error: "Patient Not found" });
   }
   if (lname === Hyperpatient.lname) {
-    const token = jwt.sign({ phone_number: Hyperpatient.phone_number }, JWT_SECRET, {
-      expiresIn: "120m",
-    });
+    const token = jwt.sign(
+      { phone_number: Hyperpatient.phone_number },
+      JWT_SECRET,
+      {
+        expiresIn: "120m",
+      }
+    );
 
     if (res.status(201)) {
       return res.json({ status: "ok", data: token });
@@ -910,12 +932,12 @@ app.get("/oneHyperPatientData", async (req, res) => {
   } catch (error) {}
 });
 
-
 //Asthma Patients
 //Asthma Patient Registration
 app.post("/registerAsthmaPatient", async (req, res) => {
   const {
     consultations,
+    dates,
     //Profile
     fname,
     lname,
@@ -931,21 +953,30 @@ app.post("/registerAsthmaPatient", async (req, res) => {
 
     chronic_cough,
 
+    //Complications
+    // prego,
+    // wheez,
+    // expiratory_time,
+    // clubb,
+    // cyanosis,
+
+    //Emergency Signs
+    acute_dyspnea,
+    sighing,
+    broken,
+    tachy_brady,
     confusion,
     tachycardia,
-    wheez,
-    sighing,
-    expiratory_time,
-    clubb,
-    cyanosis,
+    bradycardia,
+    hypoxia,
 
+    //Co-morbidities
     hiv,
+    reflux,
+    hist,
+    allergies,
+    heart,
 
-    //Complications
-    prego,
-
-    //Danger Signs
-    broken,
   } = req.body;
 
   try {
@@ -956,6 +987,7 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     }
     await AsthmaPatient.create({
       consultations,
+      dates,
       //Profile
       fname,
       lname,
@@ -971,21 +1003,34 @@ app.post("/registerAsthmaPatient", async (req, res) => {
 
       chronic_cough,
 
-      confusion,
-      tachycardia,
-      wheez,
-      sighing,
-      expiratory_time,
-      clubb,
-      cyanosis,
-
-      hiv,
-
       //Complications
       prego,
 
       //Danger Signs
+      // broken,
+      // wheez,
+      // sighing,
+      // expiratory_time,
+      // clubb,
+      // cyanosis,
+
+      //Emergency Signs
+      acute_dyspnea,
+      sighing,
       broken,
+      tachy_brady,
+      confusion,
+      tachycardia,
+      bradycardia,
+      hypoxia,
+
+      //Co-morbidities
+      hiv,
+      reflux,
+      hist,
+      allergies,
+      heart,
+
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -1000,6 +1045,7 @@ app.post("/updateAsthmaPatient", async (req, res) => {
 
     //Profile
     consultations,
+    dates,
     height,
     weight,
     bmi,
@@ -1032,6 +1078,7 @@ app.post("/updateAsthmaPatient", async (req, res) => {
         consultations: consultations,
 
         $push: {
+          dates: dates,
           //Profile
           height: height,
           weight: weight,
@@ -1067,7 +1114,14 @@ app.post("/updateAsthmaPatient", async (req, res) => {
 
 //Asthma Update Patient 1
 app.post("/updateAsthmaPatient1", async (req, res) => {
-  const { phone_number, diagnosis, patient_manage, medication, hyper_stage, control } = req.body;
+  const {
+    phone_number,
+    diagnosis,
+    patient_manage,
+    medication,
+    hyper_stage,
+    control,
+  } = req.body;
 
   try {
     await AsthmaPatient.updateOne(
@@ -1077,8 +1131,8 @@ app.post("/updateAsthmaPatient1", async (req, res) => {
           diagnosis: diagnosis,
           patient_manage: patient_manage,
           medication: medication,
-          hyper_stage:hyper_stage,
-          control:control,
+          hyper_stage: hyper_stage,
+          control: control,
         },
       }
     );
@@ -1097,9 +1151,13 @@ app.post("/login-Asthmapatient", async (req, res) => {
     return res.json({ error: "Patient Not found" });
   }
   if (lname === Asthmapatient.lname) {
-    const token = jwt.sign({ phone_number: Asthmapatient.phone_number }, JWT_SECRET, {
-      expiresIn: "120m",
-    });
+    const token = jwt.sign(
+      { phone_number: Asthmapatient.phone_number },
+      JWT_SECRET,
+      {
+        expiresIn: "120m",
+      }
+    );
 
     if (res.status(201)) {
       return res.json({ status: "ok", data: token });
@@ -1197,4 +1255,3 @@ app.get("/oneAsthmaPatientData", async (req, res) => {
       });
   } catch (error) {}
 });
-
