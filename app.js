@@ -952,6 +952,7 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     creatinine,
 
     chronic_cough,
+    dyspnea,
 
     //Complications
     // prego,
@@ -1002,9 +1003,10 @@ app.post("/registerAsthmaPatient", async (req, res) => {
       creatinine,
 
       chronic_cough,
+      dyspnea,
 
       //Complications
-      prego,
+      // prego,
 
       //Danger Signs
       // broken,
