@@ -46,6 +46,11 @@ const AsthmaDetailsScehma = new mongoose.Schema(
     allergies: Array,
     heart: Array,
     hypoxia: Array,
+
+    //results
+    diagnosis: Array,
+    medication: Array,
+    patient_manage: Array,
   },
   {
     collection: "AsthmaInfo",
