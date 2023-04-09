@@ -1121,8 +1121,7 @@ app.post("/updateAsthmaPatient1", async (req, res) => {
     diagnosis,
     patient_manage,
     medication,
-    hyper_stage,
-    control,
+
   } = req.body;
 
   try {
@@ -1133,8 +1132,7 @@ app.post("/updateAsthmaPatient1", async (req, res) => {
           diagnosis: diagnosis,
           patient_manage: patient_manage,
           medication: medication,
-          hyper_stage: hyper_stage,
-          control: control,
+     
         },
       }
     );
