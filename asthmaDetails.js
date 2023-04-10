@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 
 const AsthmaDetailsScehma = new mongoose.Schema(
   {
-    asthma_severity: Array,
-
     consultations: Number,
     dates: Array,
 

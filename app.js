@@ -977,7 +977,6 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     hist,
     allergies,
     heart,
-
   } = req.body;
 
   try {
@@ -1032,7 +1031,6 @@ app.post("/registerAsthmaPatient", async (req, res) => {
       hist,
       allergies,
       heart,
-
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -1045,32 +1043,31 @@ app.post("/updateAsthmaPatient", async (req, res) => {
   const {
     phone_number,
 
-    //Profile
     consultations,
     dates,
-    height,
-    weight,
-    bmi,
 
-    //Lab Results
-    systobp,
-    diastobp,
+    //Lab results
+    RR,
     creatinine,
 
-    //Danger signs
-    confusion,
-    vision,
-    sighing,
-    chest_pain,
-    smoke,
-    diabetes,
-    proteinuria,
+    chronic_cough,
+    dyspnea,
 
-    //Complications
+    //Emergency Signs
+    acute_dyspnea,
+    sighing,
+    broken,
+    tachy_brady,
+    confusion,
+    tachycardia,
     bradycardia,
-    hyperkalemia,
-    prego,
+    hypoxia,
+
+    //Co-morbidities
     hiv,
+    reflux,
+    allergies,
+    heart,
   } = req.body;
 
   try {
@@ -1081,30 +1078,28 @@ app.post("/updateAsthmaPatient", async (req, res) => {
 
         $push: {
           dates: dates,
-          //Profile
-          height: height,
-          weight: weight,
-          bmi: bmi,
 
-          //Lab Resultd
-          systobp: systobp,
-          diastobp: diastobp,
+          //Lab results
+          RR: RR,
           creatinine: creatinine,
+          chronic_cough: chronic_cough,
+          dyspnea: dyspnea,
 
-          //Danger signs
-          confusion: confusion,
-          vision: vision,
+          //Emergency Signs
+          acute_dyspnea: acute_dyspnea,
           sighing: sighing,
-          chest_pain: chest_pain,
-          smoke: smoke,
-          diabetes: diabetes,
-          proteinuria: proteinuria,
-
-          //Complications
+          broken: broken,
+          tachy_brady: tachy_brady,
+          confusion: confusion,
+          tachycardia: tachycardia,
           bradycardia: bradycardia,
-          hyperkalemia: hyperkalemia,
-          prego: prego,
+          hypoxia: hypoxia,
+
+          //Co-morbidities
           hiv: hiv,
+          reflux: reflux,
+          allergies: allergies,
+          heart: heart,
         },
       }
     );
@@ -1116,13 +1111,7 @@ app.post("/updateAsthmaPatient", async (req, res) => {
 
 //Asthma Update Patient 1
 app.post("/updateAsthmaPatient1", async (req, res) => {
-  const {
-    phone_number,
-    diagnosis,
-    patient_manage,
-    medication,
-
-  } = req.body;
+  const { phone_number, diagnosis, patient_manage, medication } = req.body;
 
   try {
     await AsthmaPatient.updateOne(
@@ -1132,7 +1121,6 @@ app.post("/updateAsthmaPatient1", async (req, res) => {
           diagnosis: diagnosis,
           patient_manage: patient_manage,
           medication: medication,
-     
         },
       }
     );
