@@ -137,7 +137,8 @@ app.post("/forgot-password", async (req, res) => {
     const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
       expiresIn: "20m",
     });
-    const link = `https://mediqo-api.onrender.com/reset-password/${oldUser._id}/${token}`;
+    // const link = `https://mediqo-api.onrender.com/reset-password/${oldUser._id}/${token}`;
+    const link = `http://localhost:5000/reset-password/${oldUser._id}/${token}`;
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -329,6 +330,9 @@ app.post("/registerPatient", async (req, res) => {
     diagnosis,
     medication,
     patient_manage,
+
+    //Doctor Comment
+    doctor_comment,
   } = req.body;
 
   try {
@@ -384,6 +388,9 @@ app.post("/registerPatient", async (req, res) => {
       diagnosis,
       medication,
       patient_manage,
+
+      //Doctor Comment
+      doctor_comment,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -427,6 +434,9 @@ app.post("/updatePatient", async (req, res) => {
     htn,
     liver,
     prego,
+
+    //Doctor Comment
+    doctor_comment,
   } = req.body;
 
   try {
@@ -466,6 +476,9 @@ app.post("/updatePatient", async (req, res) => {
           htn: htn,
           liver: liver,
           prego: prego,
+
+          //Doctor Comment
+          doctor_comment: doctor_comment,
         },
       }
     );
@@ -636,6 +649,7 @@ app.post("/registerHyperPatient", async (req, res) => {
     systobp,
     diastobp,
     creatinine,
+    hyperkalemia_reslts,
 
     hyper_stage,
 
@@ -658,6 +672,9 @@ app.post("/registerHyperPatient", async (req, res) => {
     diagnosis,
     medication,
     patient_manage,
+
+    //Doctor Comment
+    doctor_comment,
   } = req.body;
 
   try {
@@ -685,6 +702,7 @@ app.post("/registerHyperPatient", async (req, res) => {
       systobp,
       diastobp,
       creatinine,
+      hyperkalemia_reslts,
 
       hyper_stage,
 
@@ -707,6 +725,9 @@ app.post("/registerHyperPatient", async (req, res) => {
       diagnosis,
       medication,
       patient_manage,
+
+      //Doctor Comment
+      doctor_comment,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -730,6 +751,7 @@ app.post("/updateHyperPatient", async (req, res) => {
     systobp,
     diastobp,
     creatinine,
+    hyperkalemia_reslts,
 
     //Danger signs
     confusion,
@@ -745,6 +767,9 @@ app.post("/updateHyperPatient", async (req, res) => {
     hyperkalemia,
     prego,
     hiv,
+
+    //Comment
+    doctor_comment,
   } = req.body;
 
   try {
@@ -764,6 +789,7 @@ app.post("/updateHyperPatient", async (req, res) => {
           systobp: systobp,
           diastobp: diastobp,
           creatinine: creatinine,
+          hyperkalemia_reslts:hyperkalemia_reslts,
 
           //Danger signs
           confusion: confusion,
@@ -779,6 +805,9 @@ app.post("/updateHyperPatient", async (req, res) => {
           hyperkalemia: hyperkalemia,
           prego: prego,
           hiv: hiv,
+
+          //Comment
+          doctor_comment: doctor_comment,
         },
       }
     );
@@ -977,6 +1006,9 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     hist,
     allergies,
     heart,
+
+    //Doctor Comment
+    doctor_comment,
   } = req.body;
 
   try {
@@ -1031,6 +1063,9 @@ app.post("/registerAsthmaPatient", async (req, res) => {
       hist,
       allergies,
       heart,
+
+      //Doctor Comment
+      doctor_comment,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -1068,6 +1103,9 @@ app.post("/updateAsthmaPatient", async (req, res) => {
     reflux,
     allergies,
     heart,
+
+    //Comment
+    doctor_comment,
   } = req.body;
 
   try {
@@ -1100,6 +1138,8 @@ app.post("/updateAsthmaPatient", async (req, res) => {
           reflux: reflux,
           allergies: allergies,
           heart: heart,
+          //Comment
+          doctor_comment: doctor_comment,
         },
       }
     );

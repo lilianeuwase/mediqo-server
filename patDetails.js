@@ -5,7 +5,7 @@ const PatDetailsScehma = new mongoose.Schema(
     //Initialize
     consultations: Number,
     dates: Array,
-    
+
     //Profile
     fname: String,
     lname: String,
@@ -50,6 +50,9 @@ const PatDetailsScehma = new mongoose.Schema(
     diagnosis: Array,
     medication: Array,
     patient_manage: Array,
+
+    //Doctor Comment
+    doctor_comment: Array,
   },
   {
     collection: "PatInfo",

@@ -21,6 +21,7 @@ const HyperDetailsScehma = new mongoose.Schema(
     systobp: Array,
     diastobp: Array,
     creatinine: Array,
+    hyperkalemia_reslts: Array,
 
     hyper_stage: Array,
 
@@ -39,12 +40,13 @@ const HyperDetailsScehma = new mongoose.Schema(
     prego: Array,
     hiv: Array,
 
-   
     //results
     diagnosis: Array,
     medication: Array,
     patient_manage: Array,
 
+    //Doctor Comment
+    doctor_comment: Array,
   },
   {
     collection: "HyperInfo",
