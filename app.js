@@ -333,6 +333,13 @@ app.post("/registerPatient", async (req, res) => {
 
     //Doctor Comment
     doctor_comment,
+
+    //Vital Signs
+    temp,
+    HR,
+    BP,
+    O2,
+    RR,
   } = req.body;
 
   try {
@@ -391,6 +398,13 @@ app.post("/registerPatient", async (req, res) => {
 
       //Doctor Comment
       doctor_comment,
+
+      //Vital Signs
+      temp,
+      HR,
+      BP,
+      O2,
+      RR,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -437,6 +451,13 @@ app.post("/updatePatient", async (req, res) => {
 
     //Doctor Comment
     doctor_comment,
+
+    //Vital Signs
+    temp,
+    HR,
+    BP,
+    O2,
+    RR,
   } = req.body;
 
   try {
@@ -479,6 +500,13 @@ app.post("/updatePatient", async (req, res) => {
 
           //Doctor Comment
           doctor_comment: doctor_comment,
+
+          //Vital Signs
+          temp: temp,
+          HR: HR,
+          BP: BP,
+          O2: O2,
+          RR: RR,
         },
       }
     );
@@ -675,6 +703,12 @@ app.post("/registerHyperPatient", async (req, res) => {
 
     //Doctor Comment
     doctor_comment,
+
+    //Vital Signs
+    temp,
+    HR,
+    O2,
+    RR,
   } = req.body;
 
   try {
@@ -728,6 +762,12 @@ app.post("/registerHyperPatient", async (req, res) => {
 
       //Doctor Comment
       doctor_comment,
+
+      //Vital Signs
+      temp,
+      HR,
+      O2,
+      RR,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -770,6 +810,12 @@ app.post("/updateHyperPatient", async (req, res) => {
 
     //Comment
     doctor_comment,
+
+    //Vital Signs
+    temp,
+    HR,
+    O2,
+    RR,
   } = req.body;
 
   try {
@@ -789,7 +835,7 @@ app.post("/updateHyperPatient", async (req, res) => {
           systobp: systobp,
           diastobp: diastobp,
           creatinine: creatinine,
-          hyperkalemia_reslts:hyperkalemia_reslts,
+          hyperkalemia_reslts: hyperkalemia_reslts,
 
           //Danger signs
           confusion: confusion,
@@ -808,6 +854,12 @@ app.post("/updateHyperPatient", async (req, res) => {
 
           //Comment
           doctor_comment: doctor_comment,
+
+          //Vital Signs
+          temp: temp,
+          HR: HR,
+          O2: O2,
+          RR: RR,
         },
       }
     );
@@ -1009,6 +1061,12 @@ app.post("/registerAsthmaPatient", async (req, res) => {
 
     //Doctor Comment
     doctor_comment,
+
+    //Vital Signs
+    temp,
+    HR,
+    BP,
+    O2,
   } = req.body;
 
   try {
@@ -1066,6 +1124,12 @@ app.post("/registerAsthmaPatient", async (req, res) => {
 
       //Doctor Comment
       doctor_comment,
+
+      //Vital Signs
+      temp,
+      HR,
+      BP,
+      O2,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -1106,6 +1170,12 @@ app.post("/updateAsthmaPatient", async (req, res) => {
 
     //Comment
     doctor_comment,
+
+    //Vital Signs
+    temp,
+    HR,
+    BP,
+    O2,
   } = req.body;
 
   try {
@@ -1138,8 +1208,16 @@ app.post("/updateAsthmaPatient", async (req, res) => {
           reflux: reflux,
           allergies: allergies,
           heart: heart,
+
+          
           //Comment
           doctor_comment: doctor_comment,
+
+          //Vital Signs
+          temp: temp,
+          HR: HR,
+          BP: BP,
+          O2: O2,
         },
       }
     );

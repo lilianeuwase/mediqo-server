@@ -53,6 +53,13 @@ const PatDetailsScehma = new mongoose.Schema(
 
     //Doctor Comment
     doctor_comment: Array,
+
+    //Vital Signs
+    temp: Array,
+    HR: Array,
+    BP: Array,
+    O2: Array,
+    RR: Array,
   },
   {
     collection: "PatInfo",

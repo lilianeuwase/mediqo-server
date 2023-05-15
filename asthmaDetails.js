@@ -17,6 +17,7 @@ const AsthmaDetailsScehma = new mongoose.Schema(
     //Lab results
     RR: Array,
     creatinine: Array,
+    hypoxia: Array,
 
     chronic_cough: Array,
     dyspnea: Array,
@@ -43,7 +44,6 @@ const AsthmaDetailsScehma = new mongoose.Schema(
     hist: Array,
     allergies: Array,
     heart: Array,
-    hypoxia: Array,
 
     //results
     diagnosis: Array,
@@ -52,6 +52,12 @@ const AsthmaDetailsScehma = new mongoose.Schema(
 
     //Doctor Comment
     doctor_comment: Array,
+
+    //Vital Signs
+    temp: Array,
+    HR: Array,
+    BP: Array,
+    O2: Array,
   },
   {
     collection: "AsthmaInfo",

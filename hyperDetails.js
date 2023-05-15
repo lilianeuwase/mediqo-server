@@ -47,6 +47,13 @@ const HyperDetailsScehma = new mongoose.Schema(
 
     //Doctor Comment
     doctor_comment: Array,
+
+    //Vital Signs
+    temp: Array,
+    HR: Array,
+    O2: Array,
+    RR: Array,
+
   },
   {
     collection: "HyperInfo",
