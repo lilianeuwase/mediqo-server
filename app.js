@@ -139,7 +139,8 @@ app.post("/forgot-password", async (req, res) => {
       expiresIn: "20m",
     });
     // const link = `https://mediqo-api.onrender.com/reset-password/${oldUser._id}/${token}`;
-    const link = `http://localhost:5000/reset-password/${oldUser._id}/${token}`;
+    // const link = `http://localhost:5000/reset-password/${oldUser._id}/${token}`;
+    const link = `https://fantastic-python.cyclic.app/reset-password/${oldUser._id}/${token}`;
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
