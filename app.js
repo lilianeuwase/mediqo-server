@@ -45,6 +45,10 @@ const Patient = mongoose.model("PatInfo");
 const HyperPatient = mongoose.model("HyperInfo");
 const AsthmaPatient = mongoose.model("AsthmaInfo");
 
+app.listen(5000, () => {
+  console.log("Server Started");
+});
+
 //User Registration
 app.post("/register", async (req, res) => {
   const { fname, lname, email, phone, title, hospital, password, userType } =
@@ -121,9 +125,6 @@ app.post("/userData", async (req, res) => {
   } catch (error) {}
 });
 
-app.listen(5000, () => {
-  console.log("Server Started");
-});
 
 //Forgot Password
 app.post("/forgot-password", async (req, res) => {
