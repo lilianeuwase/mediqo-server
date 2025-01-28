@@ -4,14 +4,17 @@ const AsthmaDetailsScehma = new mongoose.Schema(
   {
     consultations: Number,
     dates: Array,
+    doctor_name: Array,
 
     //Profile
     fname: String,
     lname: String,
     age: Number,
+    DOB: Date,
     gender: String,
     height: Array,
     weight: Array,
+    ID: { type: Number, unique: true },
     phone_number: { type: Number, unique: true },
 
     //Lab results
@@ -58,6 +61,10 @@ const AsthmaDetailsScehma = new mongoose.Schema(
     HR: Array,
     BP: Array,
     O2: Array,
+
+    //Status
+    Appointment: Date,
+    Status: Boolean,
   },
   {
     collection: "AsthmaInfo",

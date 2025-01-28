@@ -5,15 +5,18 @@ const PatDetailsScehma = new mongoose.Schema(
     //Initialize
     consultations: Number,
     dates: Array,
+    doctor_name: Array,
 
     //Profile
     fname: String,
     lname: String,
     age: Number,
+    DOB: Date,
     gender: String,
     height: Array,
     weight: Array,
     bmi: Array,
+    ID: { type: Number, unique: true },
     phone_number: { type: Number, unique: true },
 
     //Classical Symptoms
@@ -60,6 +63,10 @@ const PatDetailsScehma = new mongoose.Schema(
     BP: Array,
     O2: Array,
     RR: Array,
+
+    //Status
+    Appointment: Date,
+    Status: Boolean,
   },
   {
     collection: "PatInfo",

@@ -9,7 +9,8 @@ const UserDetailsScehma = new mongoose.Schema(
     hospital: String,
     password: String,
     userType: String,
-    phone: Number,
+    phone: { type: Number, unique: true },
+    headShot: String,
   },
   {
     collection: "UserInfo",

@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://mediqo.onrender.com"],
+    origin: ["http://localhost:3000", "https://mediqo.onrender.com", "https://mediqqotesting.netlify.app"],
   })
 );
 
@@ -45,7 +45,7 @@ const Patient = mongoose.model("PatInfo");
 const HyperPatient = mongoose.model("HyperInfo");
 const AsthmaPatient = mongoose.model("AsthmaInfo");
 
-app.listen(5000, () => {
+app.listen(6000, () => {
   console.log("Server Started");
 });
 
@@ -70,6 +70,7 @@ app.post("/register", async (req, res) => {
       hospital,
       password: encryptedPassword,
       userType,
+      headShot,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -124,7 +125,6 @@ app.post("/userData", async (req, res) => {
       });
   } catch (error) {}
 });
-
 
 //Forgot Password
 app.post("/forgot-password", async (req, res) => {
@@ -288,14 +288,17 @@ app.post("/registerPatient", async (req, res) => {
   const {
     consultations,
     dates,
+    doctor_name,
     //Profile
     fname,
     lname,
     age,
+    DOB,
     gender,
     height,
     weight,
     bmi,
+    ID,
     phone_number,
 
     //Classical Symptoms
@@ -342,6 +345,10 @@ app.post("/registerPatient", async (req, res) => {
     BP,
     O2,
     RR,
+
+    //Status
+    Appointment,
+    Status,
   } = req.body;
 
   try {
@@ -353,10 +360,13 @@ app.post("/registerPatient", async (req, res) => {
     await Patient.create({
       consultations,
       dates,
+      doctor_name,
+
       //Profile
       fname,
       lname,
       age,
+      DOB,
       gender,
       height,
       weight,
@@ -407,6 +417,10 @@ app.post("/registerPatient", async (req, res) => {
       BP,
       O2,
       RR,
+
+      //Status
+      Appointment,
+      Status,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -419,6 +433,7 @@ app.post("/updatePatient", async (req, res) => {
   const {
     phone_number,
     dates,
+    doctor_name,
 
     //Profile
     consultations,
@@ -460,6 +475,10 @@ app.post("/updatePatient", async (req, res) => {
     BP,
     O2,
     RR,
+
+    //Status
+    Appointment,
+    Status,
   } = req.body;
 
   try {
@@ -470,6 +489,7 @@ app.post("/updatePatient", async (req, res) => {
 
         $push: {
           dates: dates,
+          doctor_name,
           //Profile
           height: height,
           weight: weight,
@@ -509,6 +529,10 @@ app.post("/updatePatient", async (req, res) => {
           BP: BP,
           O2: O2,
           RR: RR,
+
+          //Status
+          Appointment: Appointment,
+          Status: Status,
         },
       }
     );
@@ -664,11 +688,14 @@ app.post("/registerHyperPatient", async (req, res) => {
     //Initialize
     consultations,
     dates,
+    doctor_name,
 
     //Profile
     fname,
     lname,
     age,
+    DOB,
+    ID,
     gender,
     height,
     weight,
@@ -711,6 +738,10 @@ app.post("/registerHyperPatient", async (req, res) => {
     HR,
     O2,
     RR,
+
+    //Status
+    Appointment,
+    Status,
   } = req.body;
 
   try {
@@ -723,11 +754,14 @@ app.post("/registerHyperPatient", async (req, res) => {
       //Initialize
       consultations,
       dates,
+      doctor_name,
 
       //Profile
       fname,
       lname,
       age,
+      DOB,
+      ID,
       gender,
       height,
       weight,
@@ -770,6 +804,10 @@ app.post("/registerHyperPatient", async (req, res) => {
       HR,
       O2,
       RR,
+
+      //Status
+      Appointment,
+      Status,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -781,6 +819,7 @@ app.post("/registerHyperPatient", async (req, res) => {
 app.post("/updateHyperPatient", async (req, res) => {
   const {
     phone_number,
+    doctor_name,
 
     //Profile
     consultations,
@@ -818,6 +857,10 @@ app.post("/updateHyperPatient", async (req, res) => {
     HR,
     O2,
     RR,
+
+    //Status
+    Appointment,
+    Status,
   } = req.body;
 
   try {
@@ -828,6 +871,7 @@ app.post("/updateHyperPatient", async (req, res) => {
 
         $push: {
           dates: dates,
+          doctor_name:doctor_name,
           //Profile
           height: height,
           weight: weight,
@@ -862,6 +906,11 @@ app.post("/updateHyperPatient", async (req, res) => {
           HR: HR,
           O2: O2,
           RR: RR,
+
+          //Status
+          //Status
+          Appointment: Appointment,
+          Status: Status,
         },
       }
     );
@@ -1021,10 +1070,13 @@ app.post("/registerAsthmaPatient", async (req, res) => {
   const {
     consultations,
     dates,
+    doctor_name,
     //Profile
     fname,
     lname,
     age,
+    DOB,
+    ID,
     gender,
     height,
     weight,
@@ -1069,6 +1121,10 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     HR,
     BP,
     O2,
+
+    //Status
+    Appointment,
+    Status,
   } = req.body;
 
   try {
@@ -1080,10 +1136,13 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     await AsthmaPatient.create({
       consultations,
       dates,
+      doctor_name,
       //Profile
       fname,
       lname,
       age,
+      DOB,
+      ID,
       gender,
       height,
       weight,
@@ -1132,6 +1191,10 @@ app.post("/registerAsthmaPatient", async (req, res) => {
       HR,
       BP,
       O2,
+
+      //Status
+      Appointment,
+      Status,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -1146,6 +1209,7 @@ app.post("/updateAsthmaPatient", async (req, res) => {
 
     consultations,
     dates,
+    doctor_name,
 
     //Lab results
     RR,
@@ -1178,6 +1242,10 @@ app.post("/updateAsthmaPatient", async (req, res) => {
     HR,
     BP,
     O2,
+
+    //Status
+    Appointment,
+    Status,
   } = req.body;
 
   try {
@@ -1188,6 +1256,7 @@ app.post("/updateAsthmaPatient", async (req, res) => {
 
         $push: {
           dates: dates,
+          doctor_name:doctor_name,
 
           //Lab results
           RR: RR,
@@ -1211,7 +1280,6 @@ app.post("/updateAsthmaPatient", async (req, res) => {
           allergies: allergies,
           heart: heart,
 
-          
           //Comment
           doctor_comment: doctor_comment,
 
@@ -1220,6 +1288,10 @@ app.post("/updateAsthmaPatient", async (req, res) => {
           HR: HR,
           BP: BP,
           O2: O2,
+
+          //Status
+          Appointment: Appointment,
+          Status: Status,
         },
       }
     );
