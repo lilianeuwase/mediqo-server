@@ -14,6 +14,7 @@ const AsthmaDetailsScehma = new mongoose.Schema(
     gender: String,
     height: Array,
     weight: Array,
+    bmi: Array,
     ID: { type: Number, unique: true },
     phone_number: { type: Number, unique: true },
 

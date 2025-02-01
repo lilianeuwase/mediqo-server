@@ -11,7 +11,11 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://mediqo.onrender.com", "https://mediqqotesting.netlify.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://mediqo.onrender.com",
+      "https://mediqqotesting.netlify.app",
+    ],
   })
 );
 
@@ -871,7 +875,7 @@ app.post("/updateHyperPatient", async (req, res) => {
 
         $push: {
           dates: dates,
-          doctor_name:doctor_name,
+          doctor_name: doctor_name,
           //Profile
           height: height,
           weight: weight,
@@ -1080,6 +1084,7 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     gender,
     height,
     weight,
+    bmi,
     phone_number,
 
     //Lab results
@@ -1146,6 +1151,7 @@ app.post("/registerAsthmaPatient", async (req, res) => {
       gender,
       height,
       weight,
+      bmi,
       phone_number,
 
       //Lab results
@@ -1210,6 +1216,9 @@ app.post("/updateAsthmaPatient", async (req, res) => {
     consultations,
     dates,
     doctor_name,
+    height,
+    weight,
+    bmi,
 
     //Lab results
     RR,
@@ -1256,7 +1265,12 @@ app.post("/updateAsthmaPatient", async (req, res) => {
 
         $push: {
           dates: dates,
-          doctor_name:doctor_name,
+          doctor_name: doctor_name,
+
+          //Profile
+          height: height,
+          weight: weight,
+          bmi: bmi,
 
           //Lab results
           RR: RR,
