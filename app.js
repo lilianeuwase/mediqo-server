@@ -293,6 +293,7 @@ app.post("/registerPatient", async (req, res) => {
     consultations,
     dates,
     doctor_name,
+    hospital,
     //Profile
     fname,
     lname,
@@ -304,6 +305,7 @@ app.post("/registerPatient", async (req, res) => {
     bmi,
     ID,
     phone_number,
+    full_address,
 
     //Classical Symptoms
     polyuria,
@@ -365,6 +367,7 @@ app.post("/registerPatient", async (req, res) => {
       consultations,
       dates,
       doctor_name,
+      hospital,
 
       //Profile
       fname,
@@ -375,7 +378,9 @@ app.post("/registerPatient", async (req, res) => {
       height,
       weight,
       bmi,
+      ID,
       phone_number,
+      full_address,
 
       //Classical Symptoms
       polyuria,
@@ -438,12 +443,14 @@ app.post("/updatePatient", async (req, res) => {
     phone_number,
     dates,
     doctor_name,
+    hospital,
 
     //Profile
     consultations,
     height,
     weight,
     bmi,
+    full_address,
 
     //Lab Resultd
     glucose,
@@ -494,10 +501,12 @@ app.post("/updatePatient", async (req, res) => {
         $push: {
           dates: dates,
           doctor_name,
+          hospital:hospital,
           //Profile
           height: height,
           weight: weight,
           bmi: bmi,
+          full_address: full_address,
 
           //Lab Resultd
           glucose: glucose,
@@ -693,6 +702,7 @@ app.post("/registerHyperPatient", async (req, res) => {
     consultations,
     dates,
     doctor_name,
+    hospital,
 
     //Profile
     fname,
@@ -705,6 +715,7 @@ app.post("/registerHyperPatient", async (req, res) => {
     weight,
     bmi,
     phone_number,
+    full_address,
 
     //Lab results
     systobp,
@@ -759,6 +770,7 @@ app.post("/registerHyperPatient", async (req, res) => {
       consultations,
       dates,
       doctor_name,
+      hospital,
 
       //Profile
       fname,
@@ -771,6 +783,7 @@ app.post("/registerHyperPatient", async (req, res) => {
       weight,
       bmi,
       phone_number,
+      full_address,
 
       //Lab results
       systobp,
@@ -824,6 +837,7 @@ app.post("/updateHyperPatient", async (req, res) => {
   const {
     phone_number,
     doctor_name,
+    hospital,
 
     //Profile
     consultations,
@@ -831,6 +845,7 @@ app.post("/updateHyperPatient", async (req, res) => {
     height,
     weight,
     bmi,
+    full_address,
 
     //Lab Results
     systobp,
@@ -876,10 +891,12 @@ app.post("/updateHyperPatient", async (req, res) => {
         $push: {
           dates: dates,
           doctor_name: doctor_name,
+          hospital: hospital,
           //Profile
           height: height,
           weight: weight,
           bmi: bmi,
+          full_address: full_address,
 
           //Lab Resultd
           systobp: systobp,
@@ -1075,6 +1092,8 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     consultations,
     dates,
     doctor_name,
+    hospital,
+
     //Profile
     fname,
     lname,
@@ -1086,6 +1105,7 @@ app.post("/registerAsthmaPatient", async (req, res) => {
     weight,
     bmi,
     phone_number,
+    full_address,
 
     //Lab results
     RR,
@@ -1142,6 +1162,8 @@ app.post("/registerAsthmaPatient", async (req, res) => {
       consultations,
       dates,
       doctor_name,
+      hospital,
+
       //Profile
       fname,
       lname,
@@ -1153,6 +1175,7 @@ app.post("/registerAsthmaPatient", async (req, res) => {
       weight,
       bmi,
       phone_number,
+      full_address,
 
       //Lab results
       RR,
@@ -1219,6 +1242,8 @@ app.post("/updateAsthmaPatient", async (req, res) => {
     height,
     weight,
     bmi,
+    full_address,
+    hospital,
 
     //Lab results
     RR,
@@ -1266,11 +1291,13 @@ app.post("/updateAsthmaPatient", async (req, res) => {
         $push: {
           dates: dates,
           doctor_name: doctor_name,
+          hospital: hospital,
 
           //Profile
           height: height,
           weight: weight,
           bmi: bmi,
+          full_address: full_address,
 
           //Lab results
           RR: RR,

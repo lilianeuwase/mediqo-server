@@ -7,6 +7,7 @@ const HyperDetailsScehma = new mongoose.Schema(
     control: Array,
     dates: Array,
     doctor_name: Array,
+    hospital:  Array,
 
     //Profile
     fname: String,
@@ -19,6 +20,7 @@ const HyperDetailsScehma = new mongoose.Schema(
     bmi: Array,
     ID: { type: Number, unique: true },
     phone_number: { type: Number, unique: true },
+    full_address: String,
 
     //Lab results
     systobp: Array,

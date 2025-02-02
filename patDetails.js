@@ -6,6 +6,7 @@ const PatDetailsScehma = new mongoose.Schema(
     consultations: Number,
     dates: Array,
     doctor_name: Array,
+    hospital:  Array,
 
     //Profile
     fname: String,
@@ -18,6 +19,7 @@ const PatDetailsScehma = new mongoose.Schema(
     bmi: Array,
     ID: { type: Number, unique: true },
     phone_number: { type: Number, unique: true },
+    full_address: String,
 
     //Classical Symptoms
     polyuria: Boolean,
