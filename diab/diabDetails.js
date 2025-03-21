@@ -44,8 +44,13 @@ const DiabSchema = new mongoose.Schema(
     requestLab: { type: [[String]] }, // now an array for requested lab results
     requestLabsDates: { type: [String] }, // Consultation date as an array
     moreLab: {
-      type: [[String]],
-      validate: (v) => v.every((arr) => arr.length === 2),
+      type: [[[String]]],
+      validate: (v) =>
+        v.every(
+          (dateGroup) =>
+            Array.isArray(dateGroup) &&
+            dateGroup.every((pair) => Array.isArray(pair) && pair.length === 2)
+        ),
     },
 
     //Additional Info

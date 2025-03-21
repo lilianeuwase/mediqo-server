@@ -263,7 +263,7 @@ router.post("/registerDiabPatientLabResults", async (req, res) => {
     patient.fastglucose.push(fastglucose);
     patient.hb.push(hb);
     patient.creatinine.push(creatinine);
-    patient.moreLab = patient.moreLab.concat(moreLab);
+    patient.moreLab.push(moreLab);
 
     await patient.save();
     res.send({ status: "ok" });
