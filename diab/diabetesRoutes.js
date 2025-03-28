@@ -38,10 +38,10 @@ router.get("/paginatedDiabPatients", async (req, res) => {
   res.json(results);
 });
 
-//Get Diab Patient
+// Get Diab Patient
 router.post("/getDiabPatient", async (req, res) => {
   const { identifier } = req.body;
-  
+
   // Search for the patient using phone_number, ID, or uniqueID
   const patient = await Diabetes.findOne({
     $or: [
@@ -50,20 +50,22 @@ router.post("/getDiabPatient", async (req, res) => {
       { uniqueID: identifier },
     ],
   });
-  
+
   if (!patient) {
     return res.json({ error: "Patient Not found" });
   }
-  
+
+  // Update consultations if doctorDates is not empty
+  if (Array.isArray(patient.doctorDates) && patient.doctorDates.length > 0) {
+    patient.consultations = patient.doctorDates.length;
+    await patient.save(); // Save the updated patient record
+  }
+
   const token = jwt.sign({ id: patient.uniqueID }, JWT_SECRET, {
     expiresIn: "1200m",
   });
-  
-  if (res.status(201)) {
-    return res.json({ status: "ok", data: token });
-  } else {
-    return res.json({ error: "error" });
-  }
+
+  res.status(201).json({ status: "ok", data: token });
 });
 
 //Diab Patient Data
@@ -117,8 +119,6 @@ router.post("/diabPatientData", async (req, res) => {
   }
 });
 
-
-
 // Register Patient Profile
 router.post("/registerDiabPatientProfile", async (req, res) => {
   const {
@@ -136,13 +136,13 @@ router.post("/registerDiabPatientProfile", async (req, res) => {
     hospital,
     bmi,
   } = req.body;
-  
+
   try {
     const oldPatient = await Diabetes.findOne({ phone_number });
     if (oldPatient) {
       return res.json({ error: "Patient Exists" });
     }
-    
+
     await Diabetes.create({
       fname,
       lname,
@@ -158,7 +158,7 @@ router.post("/registerDiabPatientProfile", async (req, res) => {
       hospital,
       userType: "DiabPatient",
     });
-    
+
     res.send({ status: "ok" });
   } catch (error) {
     console.error("Error registering patient profile:", error);
@@ -168,7 +168,18 @@ router.post("/registerDiabPatientProfile", async (req, res) => {
 
 // Register Patient Vital Signs
 router.post("/registerDiabPatientVitalSigns", async (req, res) => {
-  const { phone_number, vitalsDates, height, weight, bmi, temp, BP, HR, RR, O2 } = req.body;
+  const {
+    phone_number,
+    vitalsDates,
+    height,
+    weight,
+    bmi,
+    temp,
+    BP,
+    HR,
+    RR,
+    O2,
+  } = req.body;
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -194,7 +205,19 @@ router.post("/registerDiabPatientVitalSigns", async (req, res) => {
 
 // Edit Patient Vital Signs
 router.post("/editDiabPatientVitalSigns", async (req, res) => {
-  const { phone_number, recordIndex, vitalsDates, height, weight, bmi, temp, BP, HR, RR, O2 } = req.body;
+  const {
+    phone_number,
+    recordIndex,
+    vitalsDates,
+    height,
+    weight,
+    bmi,
+    temp,
+    BP,
+    HR,
+    RR,
+    O2,
+  } = req.body;
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -252,7 +275,15 @@ router.post("/deleteDiabPatientVitalSigns", async (req, res) => {
 
 // Register Patient Lab Results
 router.post("/registerDiabPatientLabResults", async (req, res) => {
-  const { phone_number, labDates, glucose, fastglucose, hb, creatinine, moreLab } = req.body;
+  const {
+    phone_number,
+    labDates,
+    glucose,
+    fastglucose,
+    hb,
+    creatinine,
+    moreLab,
+  } = req.body;
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -275,7 +306,16 @@ router.post("/registerDiabPatientLabResults", async (req, res) => {
 
 // Edit Patient Lab Results
 router.post("/editDiabPatientLabResults", async (req, res) => {
-  const { phone_number, recordIndex, labDates, glucose, fastglucose, hb, creatinine, moreLab } = req.body;
+  const {
+    phone_number,
+    recordIndex,
+    labDates,
+    glucose,
+    fastglucose,
+    hb,
+    creatinine,
+    moreLab,
+  } = req.body;
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -336,7 +376,7 @@ router.post("/registerDiabPatientAdditionalInfo", async (req, res) => {
     comorbidities,
     doctor_comment,
   } = req.body;
-  
+
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -348,7 +388,7 @@ router.post("/registerDiabPatientAdditionalInfo", async (req, res) => {
     patient.complications.push(complications);
     patient.comorbidities.push(comorbidities);
     patient.doctor_comment.push(doctor_comment);
-    
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
@@ -368,7 +408,7 @@ router.post("/editDiabPatientAdditionalInfo", async (req, res) => {
     complications,
     comorbidities,
   } = req.body;
-  
+
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -382,7 +422,7 @@ router.post("/editDiabPatientAdditionalInfo", async (req, res) => {
     patient.dangerSigns[recordIndex] = dangerSigns;
     patient.complications[recordIndex] = complications;
     patient.comorbidities[recordIndex] = comorbidities;
-    
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
@@ -394,7 +434,7 @@ router.post("/editDiabPatientAdditionalInfo", async (req, res) => {
 // Delete Patient Additional Info
 router.post("/deleteDiabPatientAdditionalInfo", async (req, res) => {
   const { phone_number, recordIndex } = req.body;
-  
+
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -409,7 +449,7 @@ router.post("/deleteDiabPatientAdditionalInfo", async (req, res) => {
     patient.complications.splice(recordIndex, 1);
     patient.comorbidities.splice(recordIndex, 1);
     patient.doctor_comment.splice(recordIndex, 1);
-    
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
@@ -421,7 +461,7 @@ router.post("/deleteDiabPatientAdditionalInfo", async (req, res) => {
 // Register Patient Requested Lab
 router.post("/registerDiabRequestedLab", async (req, res) => {
   const { phone_number, requestLabsDates, requestLab } = req.body;
-  
+
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -429,7 +469,7 @@ router.post("/registerDiabRequestedLab", async (req, res) => {
     }
     patient.requestLabsDates.push(requestLabsDates);
     patient.requestLab.push(requestLab);
-    
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
@@ -441,7 +481,7 @@ router.post("/registerDiabRequestedLab", async (req, res) => {
 // Edit Patient Requested Lab
 router.post("/editDiabRequestedLab", async (req, res) => {
   const { phone_number, recordIndex, requestLabsDates, requestLab } = req.body;
-  
+
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -452,7 +492,7 @@ router.post("/editDiabRequestedLab", async (req, res) => {
     }
     patient.requestLabsDates[recordIndex] = requestLabsDates;
     patient.requestLab[recordIndex] = requestLab;
-    
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
@@ -464,7 +504,7 @@ router.post("/editDiabRequestedLab", async (req, res) => {
 // Delete Patient Requested Lab
 router.post("/deleteDiabRequestedLab", async (req, res) => {
   const { phone_number, recordIndex } = req.body;
-  
+
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -475,7 +515,7 @@ router.post("/deleteDiabRequestedLab", async (req, res) => {
     }
     patient.requestLabsDates.splice(recordIndex, 1);
     patient.requestLab.splice(recordIndex, 1);
-    
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
@@ -486,7 +526,15 @@ router.post("/deleteDiabRequestedLab", async (req, res) => {
 
 // Diabetes Patient Results API Route
 router.post("/registerDiabResultBack", async (req, res) => {
-  const { phone_number, diagnosis, patient_manage, medication, dosage, control, resultComment } = req.body;
+  const {
+    phone_number,
+    diagnosis,
+    patient_manage,
+    medication,
+    dosage,
+    control,
+    resultComment,
+  } = req.body;
 
   try {
     const patient = await Diabetes.findOne({ phone_number });
@@ -500,7 +548,7 @@ router.post("/registerDiabResultBack", async (req, res) => {
     patient.dosage.push(dosage);
     patient.control.push(control);
     patient.resultComment.push(resultComment);
-    
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
@@ -511,7 +559,16 @@ router.post("/registerDiabResultBack", async (req, res) => {
 
 // Edit Diab Result API
 router.post("/editDiabResultBack", async (req, res) => {
-  const { phone_number, recordIndex, patient_manage, medication, dosage, resultComment } = req.body;
+  const {
+    phone_number,
+    recordIndex,
+    diagnosis,
+    patient_manage,
+    medication,
+    dosage,
+    control,
+    resultComment,
+  } = req.body;
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -521,12 +578,13 @@ router.post("/editDiabResultBack", async (req, res) => {
     if (recordIndex < 0 || recordIndex >= patient.diagnosis.length) {
       return res.json({ error: "Invalid record index" });
     }
-    // Update editable fields
+    // Update All Fields
+    patient.diagnosis[recordIndex] = diagnosis;
     patient.patient_manage[recordIndex] = patient_manage;
     patient.medication[recordIndex] = medication;
     // dosage is expected to be an array of 3 strings
     patient.dosage[recordIndex] = dosage;
-    // resultComment is expected to be an array of strings
+    patient.control[recordIndex] = control;
     patient.resultComment[recordIndex] = resultComment;
 
     await patient.save();
@@ -539,7 +597,14 @@ router.post("/editDiabResultBack", async (req, res) => {
 
 // Edit Diab Result API
 router.post("/editDiabResultFront", async (req, res) => {
-  const { phone_number, recordIndex, patient_manage, medication, dosage, doctor_comment } = req.body;
+  const {
+    phone_number,
+    recordIndex,
+    patient_manage,
+    medication,
+    dosage,
+    doctor_comment,
+  } = req.body;
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -568,7 +633,7 @@ router.post("/editDiabResultFront", async (req, res) => {
 // Delete Diab Result API
 router.post("/deleteDiabResultBack", async (req, res) => {
   const { phone_number, recordIndex } = req.body;
-  
+
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -578,14 +643,14 @@ router.post("/deleteDiabResultBack", async (req, res) => {
     if (recordIndex < 0 || recordIndex >= patient.diagnosis.length) {
       return res.json({ error: "Invalid record index" });
     }
-        // Delete fields
-        patient.diagnosis.splice(recordIndex, 1);
-        patient.patient_manage.splice(recordIndex, 1);
-        patient.medication.splice(recordIndex, 1);
-        patient.dosage.splice(recordIndex, 1);
-        patient.control.splice(recordIndex, 1);
-        patient.resultComment.splice(recordIndex, 1);
-    
+    // Delete fields
+    patient.diagnosis.splice(recordIndex, 1);
+    patient.patient_manage.splice(recordIndex, 1);
+    patient.medication.splice(recordIndex, 1);
+    patient.dosage.splice(recordIndex, 1);
+    patient.control.splice(recordIndex, 1);
+    patient.resultComment.splice(recordIndex, 1);
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
@@ -604,7 +669,7 @@ router.post("/registerDiabPatientAppointment", async (req, res) => {
       return res.json({ error: "Patient not found" });
     }
     patient.appointment.push(appointment);
-    
+
     await patient.save();
     res.send({ status: "ok" });
   } catch (error) {
