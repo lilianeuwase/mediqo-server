@@ -115,27 +115,20 @@ router.post("/login-user", async (req, res) => {
   res.json({ status: "error", error: "Invalid Password" });
 });
 
-// Get User Data
 router.post("/userData", async (req, res) => {
   const { token } = req.body;
   try {
-    const decoded = jwt.verify(token, JWT_SECRET, (err, decoded) => {
-      if (err) {
-        return "token expired";
-      }
-      return decoded;
-    });
-    if (decoded === "token expired") {
-      return res.send({ status: "error", data: "token expired" });
-    }
+    const decoded = jwt.verify(token, JWT_SECRET);
     const uniqueID = decoded.uniqueID;
     User.findOne({ uniqueID: uniqueID })
       .then((data) => res.send({ status: "ok", data: data }))
       .catch((error) => res.send({ status: "error", data: error }));
   } catch (error) {
-    console.error(error);
+    // Token verification failed (e.g., expired)
+    return res.send({ status: "error", data: "token expired" });
   }
 });
+
 
 // Forgot Password
 router.post("/forgot-password", async (req, res) => {

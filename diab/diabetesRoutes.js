@@ -367,7 +367,6 @@ router.post("/editDiabPatientAdditionalInfo", async (req, res) => {
     dangerSigns,
     complications,
     comorbidities,
-    doctor_comment,
   } = req.body;
   
   try {
@@ -383,7 +382,6 @@ router.post("/editDiabPatientAdditionalInfo", async (req, res) => {
     patient.dangerSigns[recordIndex] = dangerSigns;
     patient.complications[recordIndex] = complications;
     patient.comorbidities[recordIndex] = comorbidities;
-    patient.doctor_comment[recordIndex] = doctor_comment;
     
     await patient.save();
     res.send({ status: "ok" });
@@ -487,8 +485,8 @@ router.post("/deleteDiabRequestedLab", async (req, res) => {
 });
 
 // Diabetes Patient Results API Route
-router.post("/registerDiabResult", async (req, res) => {
-  const { phone_number, consultations, diagnosis, patient_manage, medication, dosage, control, resultComment } = req.body;
+router.post("/registerDiabResultBack", async (req, res) => {
+  const { phone_number, diagnosis, patient_manage, medication, dosage, control, resultComment } = req.body;
 
   try {
     const patient = await Diabetes.findOne({ phone_number });
@@ -500,7 +498,6 @@ router.post("/registerDiabResult", async (req, res) => {
     patient.medication.push(medication);
     // dosage is expected to be an array of 3 strings, e.g. ["METFORMIN", "500mg", "twice a day"]
     patient.dosage.push(dosage);
-    patient.consultations = consultations; // Depending on your logic, you can push or update this field.
     patient.control.push(control);
     patient.resultComment.push(resultComment);
     
@@ -513,8 +510,8 @@ router.post("/registerDiabResult", async (req, res) => {
 });
 
 // Edit Diab Result API
-router.post("/editDiabResult", async (req, res) => {
-  const { phone_number, recordIndex, patient_manage, medication, comment, dosage, resultComment } = req.body;
+router.post("/editDiabResultBack", async (req, res) => {
+  const { phone_number, recordIndex, patient_manage, medication, dosage, resultComment } = req.body;
   try {
     const patient = await Diabetes.findOne({ phone_number });
     if (!patient) {
@@ -527,7 +524,6 @@ router.post("/editDiabResult", async (req, res) => {
     // Update editable fields
     patient.patient_manage[recordIndex] = patient_manage;
     patient.medication[recordIndex] = medication;
-    patient.doctor_comment[recordIndex] = comment;
     // dosage is expected to be an array of 3 strings
     patient.dosage[recordIndex] = dosage;
     // resultComment is expected to be an array of strings
@@ -537,6 +533,63 @@ router.post("/editDiabResult", async (req, res) => {
     res.send({ status: "ok" });
   } catch (error) {
     console.error("Error updating Diab result:", error);
+    res.send({ status: "error", error: error.message });
+  }
+});
+
+// Edit Diab Result API
+router.post("/editDiabResultFront", async (req, res) => {
+  const { phone_number, recordIndex, patient_manage, medication, dosage, doctor_comment } = req.body;
+  try {
+    const patient = await Diabetes.findOne({ phone_number });
+    if (!patient) {
+      return res.json({ error: "Patient not found" });
+    }
+    // Validate record index against the results array (e.g., diagnosis array)
+    if (recordIndex < 0 || recordIndex >= patient.diagnosis.length) {
+      return res.json({ error: "Invalid record index" });
+    }
+    // Update editable fields
+    patient.patient_manage[recordIndex] = patient_manage;
+    patient.medication[recordIndex] = medication;
+    // dosage is expected to be an array of 3 strings
+    patient.dosage[recordIndex] = dosage;
+    // resultComment is expected to be an array of strings
+    patient.doctor_comment[recordIndex] = doctor_comment;
+
+    await patient.save();
+    res.send({ status: "ok" });
+  } catch (error) {
+    console.error("Error updating Diab result:", error);
+    res.send({ status: "error", error: error.message });
+  }
+});
+
+// Delete Diab Result API
+router.post("/deleteDiabResultBack", async (req, res) => {
+  const { phone_number, recordIndex } = req.body;
+  
+  try {
+    const patient = await Diabetes.findOne({ phone_number });
+    if (!patient) {
+      return res.json({ error: "Patient not found" });
+    }
+    // Validate record index against the results array (e.g., diagnosis array)
+    if (recordIndex < 0 || recordIndex >= patient.diagnosis.length) {
+      return res.json({ error: "Invalid record index" });
+    }
+        // Delete fields
+        patient.diagnosis.splice(recordIndex, 1);
+        patient.patient_manage.splice(recordIndex, 1);
+        patient.medication.splice(recordIndex, 1);
+        patient.dosage.splice(recordIndex, 1);
+        patient.control.splice(recordIndex, 1);
+        patient.resultComment.splice(recordIndex, 1);
+    
+    await patient.save();
+    res.send({ status: "ok" });
+  } catch (error) {
+    console.error("Error deleting diabetes results:", error);
     res.send({ status: "error", error: error.message });
   }
 });
