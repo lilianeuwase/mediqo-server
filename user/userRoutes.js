@@ -14,16 +14,18 @@ const User = require("./userDetails");
 // ====================
 
 // User Registration
-router.post("/register", async (req, res) => {
+router.post("/registerUser", async (req, res) => {
   const {
+    registerDate,
     fname,
     lname,
     email,
-    phone,
+    phone_number,
     speciality,
     hospital,
     password,
     userType,
+    headShot,
   } = req.body;
 
   const encryptedPassword = await bcrypt.hash(password, 10);
@@ -36,21 +38,23 @@ router.post("/register", async (req, res) => {
     }
 
     // Check if phone number already exists
-    const phoneExists = await User.findOne({ phone });
+    const phoneExists = await User.findOne({ phone_number });
     if (phoneExists) {
       return res.json({ error: "Number already used" });
     }
 
     // Create the user in the database
     const newUser = await User.create({
+      registerDate,
       fname,
       lname,
       email,
-      phone,
+      phone_number,
       speciality,
       hospital,
       password: encryptedPassword,
       userType,
+      headShot,
     });
 
     const uniqueID = newUser.uniqueID;
@@ -128,7 +132,6 @@ router.post("/userData", async (req, res) => {
     return res.send({ status: "error", data: "token expired" });
   }
 });
-
 
 // Forgot Password
 router.post("/forgot-password", async (req, res) => {
@@ -219,17 +222,6 @@ router.get("/getAllUser", async (req, res) => {
   }
 });
 
-// Delete User
-router.post("/deleteUser", async (req, res) => {
-  const { userid } = req.body;
-  try {
-    await User.deleteOne({ _id: userid });
-    res.send({ status: "Ok", data: "Deleted" });
-  } catch (error) {
-    console.error(error);
-  }
-});
-
 // Paginate Users
 router.get("/paginatedUsers", async (req, res) => {
   const allUser = await User.find({});
@@ -248,6 +240,91 @@ router.get("/paginatedUsers", async (req, res) => {
   }
   results.result = allUser.slice(startIndex, lastIndex);
   res.json(results);
+});
+
+// Get User
+router.post("/getUser", async (req, res) => {
+  const { identifier } = req.body;
+
+  // Search for the user using phone_number, ID, or uniqueID
+  const user = await User.findOne({
+    $or: [
+      { phone_number: identifier },
+      { ID: identifier },
+      { uniqueID: identifier },
+    ],
+  });
+
+  if (!user) {
+    return res.json({ error: "User Not found" });
+  }
+
+  // (Optional) You can add any additional logic here if needed, such as updating user fields
+
+  const token = jwt.sign({ id: user.uniqueID }, JWT_SECRET, {
+    expiresIn: "1200m",
+  });
+
+  res.status(201).json({ status: "ok", data: token });
+});
+
+// Endpoint to get User Data for Admin
+router.post("/userDataAdmin", async (req, res) => {
+  const { token, identifierType } = req.body;
+
+  try {
+    // Verify the JWT token; the callback returns either an error or the decoded token.
+    const decoded = jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+      if (err) {
+        return "token expired";
+      }
+      return decodedToken;
+    });
+
+    // If the token is expired or invalid, return an error response.
+    if (decoded === "token expired") {
+      return res.send({ status: "error", data: "token expired" });
+    }
+
+    // Assume the token includes the user identifier in the "id" field.
+    const userIdentifier = decoded.id;
+
+    // Build the query based on the provided identifier type.
+    let query = {};
+    if (identifierType === "phone_number") {
+      query = { phone_number: userIdentifier };
+    } else if (identifierType === "ID") {
+      query = { ID: userIdentifier };
+    } else {
+      // Defaults to uniqueID if identifierType is not provided or does not match.
+      query = { uniqueID: userIdentifier };
+    }
+
+    // Query the database for the user data.
+    User.findOne(query)
+      .then((data) => {
+        if (data) {
+          res.send({ status: "ok", data: data });
+        } else {
+          res.send({ status: "error", data: "No user data found" });
+        }
+      })
+      .catch((error) => res.send({ status: "error", data: error }));
+  } catch (error) {
+    console.error("Error in /userDataAdmin:", error);
+    res.send({ status: "error", data: error.message });
+  }
+});
+
+// Delete User
+router.post("/deleteUser", async (req, res) => {
+  const { userid } = req.body;
+  try {
+    await User.deleteOne({ _id: userid });
+    res.send({ status: "Ok", data: "Deleted" });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 module.exports = router;

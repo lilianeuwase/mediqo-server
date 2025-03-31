@@ -4,10 +4,11 @@ const usersDb = require("../DB/dbUsers");
 
 const UserSchema = new mongoose.Schema(
   {
+    registerDate: { type: String, required: true }, // Patient Registration date
     fname: { type: String, required: true },
     lname: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true, unique: true },
+    phone_number: { type: String, required: true, unique: true },
     speciality: { type: String},
     hospital: { type: String},
     password: { type: String, required: true },

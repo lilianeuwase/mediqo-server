@@ -134,7 +134,6 @@ router.post("/registerDiabPatientProfile", async (req, res) => {
     registerDate,
     doctor_name,
     hospital,
-    bmi,
   } = req.body;
 
   try {
